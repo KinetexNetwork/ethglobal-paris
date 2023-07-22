@@ -1,0 +1,3 @@
+[submodule "hashi"]
+	path = hashi
+	url = https://github.com/gnosis/hashi
