@@ -20,8 +20,6 @@
     "c": "yarn coverage"
   },
   "devDependencies": {
-    "@chainlink/contracts": "^0.6.1",
-    "@chainlink/contracts-ccip": "^0.7.6",
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
@@ -30,7 +28,6 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "@nomiclabs/hardhat-solhint": "^3.0.1",
-    "@openzeppelin/contracts": "^4.8.3",
     "@typechain/ethers-v5": "^10.2.1",
     "@typechain/hardhat": "^6.1.6",
     "@types/chai": "^4.3.5",
@@ -56,6 +53,7 @@
   "dependencies": {
     "@eth-optimism/contracts-bedrock": "^0.16.0",
     "@hyperlane-xyz/sdk": "^1.4.2",
+    "@openzeppelin/contracts": "^4.8.3",
     "solidity-rlp": "^2.0.8"
   }
 }
