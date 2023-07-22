@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
 interface IHeaderReporter {
@@ -6,7 +7,7 @@ interface IHeaderReporter {
 
     error HeaderOutOfRange(address emitter, uint256 blockNumber);
 
-    function getBlockHeader(uint256 blockNumber_) external view returns (bytes32);
+    function getBlockHeader(uint256 blockNumber) external view returns (bytes32);
 
-    function reportHeader(uint256 blockNumber_) external payable returns (bytes32 transferId);
+    function reportHeader(uint256 blockNumber) external payable returns (bytes32 transferId);
 }
