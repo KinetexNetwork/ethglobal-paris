@@ -18,12 +18,12 @@ contract HyperlaneQueryAdapter is OracleAdapter {
 
     mapping(uint32 => address) public domainToHeaderReporter;
 
-    constructor(address iqsRouter_, address igp_, uint32[] memory domains_, address[] memory headerReporters_) {
-        iqsRouter = IInterchainQueryRouter(iqsRouter_);
-        igp = IInterchainGasPaymaster(igp_);
-        require(domains_.length == headerReporters_.length, "HQA: invalid inputs");
-        for (uint256 i = 0; i < domains_.length; i++) {
-            domainToHeaderReporter[domains_[i]] = headerReporters_[i];
+    constructor(address _iqsRouter, address _igp, uint32[] memory _domains, address[] memory _headerReporters) {
+        iqsRouter = IInterchainQueryRouter(_iqsRouter);
+        igp = IInterchainGasPaymaster(_igp);
+        require(_domains.length == _headerReporters.length, "HQA: invalid inputs");
+        for (uint256 i = 0; i < _domains.length; i++) {
+            domainToHeaderReporter[_domains[i]] = _headerReporters[i];
         }
     }
 
@@ -32,23 +32,23 @@ contract HyperlaneQueryAdapter is OracleAdapter {
         _;
     }
 
-    function requestHeader(uint32 origin_, uint256 blockNumber_) external payable returns (bytes32 messageId) {
-        if (hashes[origin_][blockNumber_] != 0) revert HeaderAlreadyStored();
-        if (domainToHeaderReporter[origin_] == address(0)) revert InvalidDomain();
+    function requestHeader(uint32 _origin, uint256 _blockNumber) external payable returns (bytes32 messageId) {
+        if (hashes[_origin][_blockNumber] != 0) revert HeaderAlreadyStored();
+        if (domainToHeaderReporter[_origin] == address(0)) revert InvalidDomain();
 
-        IHeaderReporter headerReporter = IHeaderReporter(domainToHeaderReporter[origin_]);
+        IHeaderReporter _headerReporter = IHeaderReporter(domainToHeaderReporter[_origin]);
 
         messageId = IInterchainQueryRouter(iqsRouter).query(
-            origin_,
-            address(headerReporter),
-            abi.encodeCall(headerReporter.getBlockHeader, (blockNumber_)),
-            abi.encodePacked(this.storeHash.selector, origin_, blockNumber_)
+            _origin,
+            address(_headerReporter),
+            abi.encodeCall(_headerReporter.getBlockHeader, (_blockNumber)),
+            abi.encodePacked(this.storeHash.selector, _origin, _blockNumber)
         );
 
-        igp.payForGas{value: msg.value}(messageId, origin_, XCALL_GAS_UNITS, msg.sender);
+        igp.payForGas{value: msg.value}(messageId, _origin, XCALL_GAS_UNITS, msg.sender);
     }
 
-    function storeHash(uint32 origin_, uint256 blockNumber_, bytes32 blockHeader_) external onlyCallback {
-        _storeHash(uint256(origin_), blockNumber_, blockHeader_);
+    function storeHash(uint32 _origin, uint256 _blockNumber, bytes32 _blockHeader) external onlyCallback {
+        _storeHash(uint256(_origin), _blockNumber, _blockHeader);
     }
 }

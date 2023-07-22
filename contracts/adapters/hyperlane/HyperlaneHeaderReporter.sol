@@ -16,21 +16,21 @@ contract HyperlaneHeaderReporter is HeaderReporter {
     uint32 public immutable destinationDomain;
     address public immutable target;
 
-    constructor(address outbox_, address igp_, uint32 destinationDomain_, address target_) {
-        outbox = IMailbox(outbox_);
-        igp = IInterchainGasPaymaster(igp_);
-        destinationDomain = destinationDomain_;
-        target = target_;
+    constructor(address _outbox, address _igp, uint32 _destinationDomain, address _target) {
+        outbox = IMailbox(_outbox);
+        igp = IInterchainGasPaymaster(_igp);
+        destinationDomain = _destinationDomain;
+        target = _target;
     }
 
-    function reportHeader(uint256 blockNumber_) external payable returns (bytes32 transferId) {
-        bytes32 blockHeader = getBlockHeader(blockNumber_);
-        bytes memory callData = abi.encode(blockNumber_, blockHeader);
+    function reportHeader(uint256 blockNumber) external payable returns (bytes32 transferId) {
+        bytes32 _blockHeader = getBlockHeader(blockNumber);
+        bytes memory _callData = abi.encode(blockNumber, _blockHeader);
 
-        transferId = outbox.dispatch(destinationDomain, target.addressToBytes32(), callData);
+        transferId = outbox.dispatch(destinationDomain, target.addressToBytes32(), _callData);
         igp.payForGas{value: msg.value}(transferId, destinationDomain, XCALL_GAS_UNITS, msg.sender);
 
-        emit HeaderReported(blockNumber_, blockHeader);
+        emit HeaderReported(blockNumber, _blockHeader);
     }
 
     function estimateGasCosts() public view returns (uint256 value) {

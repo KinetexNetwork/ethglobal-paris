@@ -18,18 +18,33 @@ contract HyperlaneAdapter is OracleAdapter, IMessageRecipient {
     mapping(uint32 => address) public domainToHeaderReporter;
     mapping(uint32 => address) public domainToMailbox;
 
-    constructor(HyperlaneAdapterDomainParams[] memory domainsParams_) {
-        for (uint256 i = 0; i < domainsParams_.length; i++) {
-            domainToMailbox[domainsParams_[i].domain] = domainsParams_[i].mailbox;
-            domainToHeaderReporter[domainsParams_[i].domain] = domainsParams_[i].headerReporter;
+    constructor(HyperlaneAdapterDomainParams[] memory _domainsParams) {
+        for (uint256 i = 0; i < _domainsParams.length; i++) {
+            domainToMailbox[_domainsParams[i].domain] = _domainsParams[i].mailbox;
+            domainToHeaderReporter[_domainsParams[i].domain] = _domainsParams[i].headerReporter;
         }
     }
 
-    function handle(uint32 _origin, bytes32 _sender, bytes calldata _message) external {
+    modifier onlyMailbox(uint32 _origin) {
         require(msg.sender == domainToMailbox[_origin], "HA: invalid mailbox");
-        require(domainToHeaderReporter[_origin] != address(0), "HA: invalid domain");
-        require(_sender.bytes32ToAddress() == domainToHeaderReporter[_origin], "HA: invalid sender");
+        _;
+    }
 
+    modifier validateDomain(uint32 _origin) {
+        require(domainToHeaderReporter[_origin] != address(0), "HA: invalid domain");
+        _;
+    }
+
+    modifier onlyHeaderReporter(uint32 _origin, bytes32 _sender) {
+        require(_sender.bytes32ToAddress() == domainToHeaderReporter[_origin], "HA: invalid sender");
+        _;
+    }
+
+    function handle(
+        uint32 _origin,
+        bytes32 _sender,
+        bytes calldata _message
+    ) external validateDomain(_origin) onlyMailbox(_origin) onlyHeaderReporter(_origin, _sender) {
         (uint256 blockNumber, bytes32 newBlockHeader) = abi.decode(_message, (uint256, bytes32));
         _storeHash(uint256(_origin), blockNumber, newBlockHeader);
     }
