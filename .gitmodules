@@ -1,3 +1,6 @@
 [submodule "hashi"]
 	path = hashi
 	url = https://github.com/gnosis/hashi
+[submodule "keccak256-circom"]
+	path = keccak256-circom
+	url = https://github.com/vocdoni/keccak256-circom
