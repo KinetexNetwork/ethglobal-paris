@@ -54,6 +54,8 @@
     "typescript": ">=5.0.4"
   },
   "dependencies": {
-    "@hyperlane-xyz/sdk": "^1.4.2"
+    "@eth-optimism/contracts-bedrock": "^0.16.0",
+    "@hyperlane-xyz/sdk": "^1.4.2",
+    "solidity-rlp": "^2.0.8"
   }
 }
