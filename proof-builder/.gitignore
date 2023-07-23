@@ -1,0 +1,14 @@
+# js
+build
+node_modules
+
+# block data folder
+output/*
+!output/.gitkeep
+
+# orval build
+api/*
+!api/.gitkeep
+
+# env
+.env
