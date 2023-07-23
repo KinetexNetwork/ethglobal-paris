@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-contract BHRWhitelist is Ownable {
+abstract contract BHRWhitelist is Ownable {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     event HeaderReporterAdded(address headerReporter);

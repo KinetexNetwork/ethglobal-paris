@@ -13,7 +13,9 @@ interface IBHRManager {
 
     error NotRecentBlock(uint256 blockNumber);
 
-    function syncLastCheckpoint() external;
+    error BlockAlreadyReported(uint256 blockNumber);
 
-    function syncBlockHeader(uint256 blockNum_) external;
+    // function syncLastCheckpoint(uint256[] calldata gasCosts) external payable;
+
+    // function syncBlockHeader(uint256 blockNum_, uint256[] calldata gasCosts) external payable;
 }
